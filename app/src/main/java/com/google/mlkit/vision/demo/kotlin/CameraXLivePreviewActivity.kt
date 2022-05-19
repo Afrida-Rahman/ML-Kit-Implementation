@@ -40,7 +40,6 @@ import com.google.mlkit.vision.demo.GraphicOverlay
 import com.google.mlkit.vision.demo.R
 import com.google.mlkit.vision.demo.VisionImageProcessor
 import com.google.mlkit.vision.demo.kotlin.posedetector.PoseDetectorProcessor
-import com.google.mlkit.vision.demo.kotlin.segmenter.SegmenterProcessor
 import com.google.mlkit.vision.demo.preference.PreferenceUtils
 
 /** Live preview demo app for ML Kit APIs using CameraX. */
@@ -187,7 +186,6 @@ class CameraXLivePreviewActivity :
                             rescaleZForVisualization = false
                         )
                     }
-                    SELFIE_SEGMENTATION -> SegmenterProcessor(this)
                     else -> throw IllegalStateException("Invalid model name")
                 }
             } catch (e: Exception) {
