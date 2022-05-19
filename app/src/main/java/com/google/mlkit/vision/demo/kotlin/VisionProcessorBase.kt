@@ -61,30 +61,6 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
     @GuardedBy("this")
     private var processingMetaData: FrameMetadata? = null
 
-    // -----------------Code for processing single still image----------------------------------------
-    override fun processBitmap(bitmap: Bitmap?, graphicOverlay: GraphicOverlay) {
-
-        requestDetectInImage(
-            InputImage.fromBitmap(bitmap!!, 0),
-            graphicOverlay,
-            /* originalCameraImage= */ null
-        )
-    }
-
-    // -----------------Code for processing live preview frame from Camera1 API-----------------------
-    @Synchronized
-    override fun processByteBuffer(
-        data: ByteBuffer?,
-        frameMetadata: FrameMetadata?,
-        graphicOverlay: GraphicOverlay
-    ) {
-        latestImage = data
-        latestImageMetaData = frameMetadata
-        if (processingImage == null && processingMetaData == null) {
-            processLatestImage(graphicOverlay)
-        }
-    }
-
     @Synchronized
     private fun processLatestImage(graphicOverlay: GraphicOverlay) {
         processingImage = latestImage

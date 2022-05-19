@@ -7,7 +7,6 @@ import android.util.Size
 import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import com.google.common.base.Preconditions
-import com.google.mlkit.vision.demo.R
 import com.google.mlkit.vision.pose.PoseDetectorOptionsBase
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
@@ -24,10 +23,8 @@ object PreferenceUtils {
             lensFacing == CameraSelector.LENS_FACING_BACK
                     || lensFacing == CameraSelector.LENS_FACING_FRONT
         )
-        val prefKey =
-            if (lensFacing == CameraSelector.LENS_FACING_BACK) context.getString(R.string.pref_key_camerax_rear_camera_target_resolution) else context.getString(
-                R.string.pref_key_camerax_front_camera_target_resolution
-            )
+        val prefKey = if (lensFacing == CameraSelector.LENS_FACING_BACK) "crctas" else "cfctas"
+
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         return try {
             Size.parseSize(sharedPreferences.getString(prefKey, null))
@@ -38,14 +35,11 @@ object PreferenceUtils {
 
     fun getPoseDetectorOptionsForLivePreview(context: Context): PoseDetectorOptionsBase {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val prefKey = context.getString(R.string.pref_key_pose_detector_prefer_gpu)
-        val performancePrefKey =
-            context.getString(R.string.pref_key_live_preview_pose_detection_performance_mode)
         val performanceMode = sharedPreferences.getString(
-            performancePrefKey,
+            "lppdpm",
             POSE_DETECTOR_PERFORMANCE_MODE_FAST.toString()
         )!!.toInt()
-        val preferGPU = sharedPreferences.getBoolean(prefKey, true)
+        val preferGPU = sharedPreferences.getBoolean("pdpg", true)
         return if (performanceMode == POSE_DETECTOR_PERFORMANCE_MODE_FAST) {
             val builder =
                 PoseDetectorOptions.Builder().setDetectorMode(PoseDetectorOptions.STREAM_MODE)
