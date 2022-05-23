@@ -4,7 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/layout-land/activity_vision_camerax_live_preview.xml" value="0.318342151675485" />
-        <entry key="app/src/main/res/layout/activity_vision_camerax_live_preview.xml" value="0.35597826086956524" />
+        <entry key="app/src/main/res/layout/activity_vision_camerax_live_preview.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_vision_live_preview.xml" value="0.35597826086956524" />
         <entry key="app/src/main/res/layout/spinner_style.xml" value="0.35597826086956524" />
         <entry key="app/src/main/res/layout/toggle_style.xml" value="0.35597826086956524" />

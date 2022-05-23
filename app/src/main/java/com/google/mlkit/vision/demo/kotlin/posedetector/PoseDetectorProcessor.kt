@@ -54,7 +54,7 @@ class PoseDetectorProcessor(
         results: PoseWithClassification,
         graphicOverlay: GraphicOverlay
     ) {
-        Log.d("result1", "$showInFrameLikelihood")
+        Log.d("result1", "${graphicOverlay}")
         graphicOverlay.add(
             PoseGraphic(
                 graphicOverlay,
