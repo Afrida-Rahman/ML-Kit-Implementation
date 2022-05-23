@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Google LLC. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.google.mlkit.vision.demo.kotlin
 
 import android.app.ActivityManager
@@ -5,6 +21,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build.VERSION_CODES
 import android.widget.Toast
+import androidx.annotation.GuardedBy
 import androidx.annotation.RequiresApi
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageProxy
@@ -14,15 +31,34 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.demo.*
 import java.nio.ByteBuffer
 
+/**
+ * Abstract base class for ML Kit frame processors. Subclasses need to implement {@link
+ * #onSuccess(T, FrameMetadata, GraphicOverlay)} to define what they want to with the detection
+ * results and {@link #detectInImage(VisionImage)} to specify the detector object.
+ *
+ * @param <T> The type of the detected feature.
+ */
 abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
 
     private var activityManager: ActivityManager =
         context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     private val executor = ScopedExecutor(TaskExecutors.MAIN_THREAD)
+
+    // Whether this processor is already shut down
     private var isShutdown = false
+
+    // To keep the latest images and its metadata.
+    @GuardedBy("this")
     private var latestImage: ByteBuffer? = null
+
+    @GuardedBy("this")
     private var latestImageMetaData: FrameMetadata? = null
+
+    // To keep the images and metadata in process.
+    @GuardedBy("this")
     private var processingImage: ByteBuffer? = null
+
+    @GuardedBy("this")
     private var processingMetaData: FrameMetadata? = null
 
     @Synchronized
@@ -59,6 +95,7 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
             .addOnSuccessListener(executor) { processLatestImage(graphicOverlay) }
     }
 
+    // -----------------Code for processing live preview frame from CameraX API-----------------------
     @RequiresApi(VERSION_CODES.LOLLIPOP)
     @ExperimentalGetImage
     override fun processImageProxy(image: ImageProxy, graphicOverlay: GraphicOverlay) {
@@ -78,6 +115,7 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
             .addOnCompleteListener { image.close() }
     }
 
+    // -----------------Common processing logic-------------------------------------------------------
     private fun requestDetectInImage(
         image: InputImage,
         graphicOverlay: GraphicOverlay,

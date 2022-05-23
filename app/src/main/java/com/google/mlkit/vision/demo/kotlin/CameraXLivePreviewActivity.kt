@@ -299,6 +299,8 @@ class CameraXLivePreviewActivity :
             )
         private const val TAG = "CameraXLivePreview"
         private const val POSE_DETECTION = "Pose Detection"
+        private const val SELFIE_SEGMENTATION = "Selfie Segmentation"
+
         private const val STATE_SELECTED_MODEL = "selected_model"
     }
 }
